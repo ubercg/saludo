@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pantalla LED Pro - Reloj y Clima</title>
+    <meta name="viewport" content="width=8096, height=2560, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Reset y Estructura Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 8096px;
+            height: 2560px;
+            background-color: black;
+            overflow: hidden;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            /* Fuente más moderna tipo la imagen */
+            font-weight: 700;
+        }
+
+        /* Contenedor con borde rojo (LED) */
+        .led-border {
+            width: 100%;
+            height: 100%;
+            border: 40px solid red;
+            display: flex;
+            padding: 60px;
+        }
+
+        /* División de Pantalla */
+        .left-panel {
+            flex: 2;
+            /* Más ancho */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-right: 15px solid white;
+            /* Línea divisoria */
+            position: relative;
+        }
+
+        .right-panel {
+            flex: 1;
+            /* Panel de clima lateral */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        /* --- PANEL IZQUIERDO --- */
+
+        /* Clima superior izquierdo (Mini) */
+        .top-weather-mini {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            color: white;
+        }
+
+        .top-weather-mini i {
+            font-size: 250px;
+            color: #FFD700;
+        }
+
+        .top-weather-mini .temp {
+            font-size: 220px;
+            font-weight: bold;
+        }
+
+        /* Clima superior centro (Detalle) */
+        .top-weather-detail {
+            position: absolute;
+            top: 100px;
+            right: 150px;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            color: white;
+            text-align: left;
+        }
+
+        .top-weather-detail i {
+            font-size: 250px;
+        }
+
+        .top-weather-detail .desc-group {
+            font-size: 150px;
+            line-height: 1.1;
+        }
+
+        /* Saludo Central */
+        #greeting {
+            font-size: 650px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 40px;
+            letter-spacing: -50px;
+        }
+
+        #greeting_br {
+            /* border-bottom: 1px solid white; */
+            width: 100%;
+            margin-bottom: 300px;
+        }
+
+        /* Fecha */
+        #clock-text {
+            font-size: 300px;
+            color: white;
+            margin-bottom: 40px;
+            letter-spacing: -10px;
+        }
+
+        /* Ubicación Inferior Central */
+        .location-main {
+            font-size: 220px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Hora en formato 24h */
+        .time-24h {
+            font-size: 280px;
+            font-weight: bold;
+            color: white;
+            margin-top: 40px;
+            letter-spacing: -15px;
+        }
+
+        /* .location-main,
+    .city-name,
+    .big-temp {
+        letter-spacing: -20px;
+    } */
+
+
+        /* --- PANEL DERECHO (CLIMA LATERAL) --- */
+        .right-panel i.main-icon {
+            font-size: 550px;
+            color: #FFD700;
+            margin-bottom: 50px;
+        }
+
+        .right-panel .big-temp {
+            font-size: 450px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .right-panel .city-name {
+            font-size: 180px;
+            margin-bottom: 100px;
+            font-weight: bold;
+        }
+
+        .right-panel .weather-sub-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            color: #FFFFFF;
+            font-size: 160px;
+        }
+
+        .right-panel .weather-sub-detail i {
+            font-size: 180px;
+        }
+
+        /* .weather-sub-detail {
+        letter-spacing: -10px;
+    } */
+
+        .brand-logo-top {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 200px;
+            width: auto;
+        }
+
+        .brand-logo-side {
+            position: absolute;
+            top: 60px;
+            left: 60px;
+            height: 200px;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="led-border">
+        <div class="left-panel">
+            <div class="top-weather-mini">
+                <i class="fas fa-sun" id="mini-icon"></i>
+                <span class="temp" id="mini-temp">--° C</span>
+            </div>
+
+            <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/logo-footer-mn9vQIFL.png"
+                class="brand-logo-top" alt="Municipio de Querétaro">
+
+            <div class="top-weather-detail">
+                <i class="fas fa-tint" style="color: white;"></i>
+                <div class="desc-group">
+                    <div id="desc-text">--- ---</div>
+                    <div>Humedad: <span id="hum-text">--</span>%</div>
+                </div>
+            </div>
+            <div id="greeting_br"></div>
+            <div id="greeting">¡Buen día!</div>
+            <div id="clock-text">--- -- -- --- -- ----</div>
+            <div class="location-main" id="loc-main">Qro., MX</div>
+            <div class="time-24h" id="time-display">00:00:00</div>
+        </div>
+
+        <div class="right-panel" style="position: relative;">
+            <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/bloque-BK2I2uP8.svg" class="brand-logo-side"
+                alt="BLOQUE">
+            <i id="side-icon" class="fas fa-sun main-icon"></i>
+            <div class="big-temp" id="side-temp">--° C</div>
+            <div class="city-name" id="side-loc">Qro., MX</div>
+
+            <div class="weather-sub-detail">
+                <div><i class="fas fa-cloud-sun"></i> <span id="side-desc">--- ---</span></div>
+                <div>Humedad: <span id="side-hum">--</span>% <i class="fas fa-tint"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const day = String(now.getDate());
+            const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            document.getElementById('clock-text').textContent = `${dias[now.getDay()]} ${day} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+
+            // Actualizar hora en formato 24h
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time-display').textContent = `${hours}:${minutes}:${seconds}`;
+
+            // Saludo
+            const hour = now.getHours();
+            let greet = "¡Buenas noches!";
+            if (hour >= 5 && hour < 12) greet = "¡Buenos días!";
+            else if (hour >= 12 && hour < 19) greet = "¡Buenas tardes!";
+            // Noche: 19:00:00 a 04:59:59 (cubierto por el valor inicial '¡Buenas noches!')
+            document.getElementById('greeting').textContent = greet;
+        }
+
+        function getWeatherIconFA(iconCode) {
+            const map = {
+                "01d": "fas fa-sun",
+                "01n": "fas fa-moon",
+
+                "02d": "fas fa-cloud-sun",
+                "02n": "fas fa-cloud-moon",
+
+                "03d": "fas fa-cloud",
+                "03n": "fas fa-cloud",
+
+                "04d": "fas fa-cloud-meatball",
+                "04n": "fas fa-cloud-meatball",
+
+                "09d": "fas fa-cloud-showers-heavy",
+                "09n": "fas fa-cloud-showers-heavy",
+
+                "10d": "fas fa-cloud-sun-rain",
+                "10n": "fas fa-cloud-moon-rain",
+
+                "11d": "fas fa-bolt",
+                "11n": "fas fa-bolt",
+
+                "13d": "fas fa-snowflake",
+                "13n": "fas fa-snowflake",
+
+                "50d": "fas fa-smog",
+                "50n": "fas fa-smog"
+            };
+
+            return map[iconCode] || "fas fa-sun";
+        }
+
+
+        const apiKey = "TU APYKEY";
+        const lat = 0;
+        const lon = 0;
+
+        async function updateWeather() {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                const data = await res.json();
+
+                // Validación de datos antes de renderizar (RNF 7.1)
+                if (!data.main || typeof data.main.temp !== 'number') {
+                    throw new Error("Datos de temperatura inválidos");
+                }
+
+                const temp = Math.round(data.main.temp);
+                const desc = data.weather[0].description.charAt(0).toUpperCase() +
+                    data.weather[0].description.slice(1);
+                const hum = data.main.humidity;
+                const loc = `${data.name}, ${data.sys.country}`;
+
+                const iconCode = data.weather[0].icon;
+                const iconClass = getWeatherIconFA(iconCode);
+
+                /* Renderizado Seguro al DOM */
+                document.getElementById('mini-temp').textContent = `${temp}° C`;
+                document.getElementById('side-temp').textContent = `${temp}° C`;
+                document.getElementById('desc-text').textContent = desc;
+                document.getElementById('side-desc').textContent = desc;
+                document.getElementById('hum-text').textContent = hum;
+                document.getElementById('side-hum').textContent = hum;
+                document.getElementById('loc-main').textContent = loc;
+                document.getElementById('side-loc').textContent = loc;
+
+                /* ICONOS DINÁMICOS */
+                document.getElementById('mini-icon').className = iconClass;
+                document.getElementById('side-icon').className = `${iconClass} main-icon`;
+
+            } catch (e) {
+                // Flujo Excepcional (2.3): Mantener últimos datos válidos (no hacer nada en el DOM)
+                // Solo registrar en consola para Observabilidad (RNF 5)
+                console.error("Error al actualizar clima (manteniendo datos previos):", e);
+            }
+        }
+
+
+        setInterval(updateClock, 1000);
+        setInterval(updateWeather, 600000);
+        updateClock();
+        updateWeather();
+    </script>
+
+</body>
+
+</html>
