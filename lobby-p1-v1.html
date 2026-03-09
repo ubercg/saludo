@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pantalla LED Pro - Reloj y Clima</title>
+    <meta name="viewport" content="width=8096, height=2560, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;900&display=swap" rel="stylesheet">
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <style>
+      /* =========================
+   RESET GENERAL
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* =========================
+   LAYOUT BASE LED 7680x1080
+========================= */
+html,
+body {
+    width: 7680px;
+    height: 1080px;
+    overflow: hidden;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-weight: 700;
+    background: linear-gradient(
+        to bottom,
+        #1e5a9e 0%,
+        #2b7bc4 30%,
+        #4a9fd8 70%,
+        #6bb5e3 100%
+    );
+}
+
+/* =========================
+   VIDEO DE FONDO
+========================= */
+#video-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.45;
+    transition: opacity 0.5s ease-in-out, filter 1s ease-in-out;
+}
+
+/* =========================
+   MARCO LED
+========================= */
+.led-border {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    /* border: 30px solid red; */
+    padding: 40px;
+    display: flex;
+    gap: 80px;
+    overflow: hidden;
+}
+
+/* =========================
+   PANELES GLASS
+========================= */
+.left-panel,
+.right-panel {
+    flex: 1;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-radius: 80px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+}
+
+/* Aire lateral sin romper altura */
+.left-panel {
+    margin-left: 120px;
+}
+
+.right-panel {
+    margin-right: 120px;
+    text-align: center;
+    color: white;
+}
+
+/* =========================
+   PANEL IZQUIERDO
+========================= */
+.brand-logo-top {
+    position: absolute;
+    top: 60px;
+    height: 280px;
+    width: auto;
+}
+
+#greeting {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 220px;
+    font-weight: 900;
+    color: white;
+    margin-top: 220px;
+}
+
+#clock-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 110px;
+    font-weight: 600;
+    color: white;
+    margin-top: 20px;
+}
+
+/* =========================
+   PANEL DERECHO
+========================= */
+.time-24h {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 360px;
+    font-weight: 900;
+    margin-bottom: 0px;
+}
+
+.big-temp {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 200px;
+    font-weight: 600;
+    margin-bottom: 0px;
+}
+
+.city-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 110px;
+    font-weight: 600;
+}
+
+/* =========================
+   BLOQUES INFERIORES
+========================= */
+.top-weather-detail,
+.weather-sub-detail {
+    position: absolute;
+    bottom: 80px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 90px;
+    font-weight: 400;
+    color: white;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    z-index: 10;
+}
+
+.top-weather-detail {
+    left: 1400px;
+    top: 920px;
+}
+
+.top-weather-detail .desc-group {
+    display: flex;
+    gap: 40px;
+}
+
+.weather-sub-detail {
+    right: 950px;
+    top: 920px;
+}
+
+/* =========================
+   TRANSICIONES AMBIENTALES
+========================= */
+:root {
+    --ambient-light: 1;
+}
+
+body {
+    filter: brightness(calc(0.65 + (var(--ambient-light) * 0.35)));
+    transition: filter 60s linear;
+}
+
+#video-background {
+    opacity: calc(0.25 + (var(--ambient-light) * 0.35));
+    filter: brightness(calc(0.55 + (var(--ambient-light) * 0.45)));
+}
+
+.left-panel,
+.right-panel {
+    background: rgba(
+        255,
+        255,
+        255,
+        calc(0.08 + (var(--ambient-light) * 0.12))
+    );
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="led-border">
+        <!-- Video de fondo -->
+        <video id="video-background" autoplay muted loop playsinline>
+            <source id="video-source-mp4" src="videos/bloque_welcome.mp4" type="video/mp4">
+            <source id="video-source-mov" src="videos/bloque_welcome.mov" type="video/quicktime">
+            Tu navegador no soporta video HTML5.
+        </video>
+
+        <div class="left-panel">
+            <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/bloque-BK2I2uP8.svg" class="brand-logo-top" alt="BLOQUE">
+            <div id="greeting">¡Buen día!</div>
+            <div id="clock-text">--- -- -- --- -- ----</div>   
+        </div>
+        <div class="top-weather-detail">
+            <div class="desc-group">
+                <div id="desc-text">--- ---</div>
+                <div>Humedad: <span id="hum-text">--</span>%</div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="time-24h" id="time-display">00:00:00</div>
+            <div class="big-temp" id="side-temp">--° C</div>
+            <div class="city-name" id="side-loc">Qro., MX</div>
+        </div>
+        <div class="weather-sub-detail">
+
+                <div>
+                    <span> bloqueqro.municipiodequeretaro.gob.mx</span>
+                </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // ========== SISTEMA DE VIDEOS DINÁMICOS SEGÚN CLIMA ==========
+        const videoElement = document.getElementById('video-background');
+        
+        // Mapa de videos según condiciones climáticas
+        const weatherVideos = {
+            "01": "sunny",                    // Cielo despejado
+            "02": "partly_cloudy",           // Pocas nubes
+            "03": "cloudy",                  // Nubes dispersas
+            "04": "overcast",                // Nubes rotas
+            "09": "rain-light",              // Lluvia ligera
+            "10": "rain",                    // Lluvia
+            "11": "thunderstorm",            // Tormenta
+            "13": "snow",                    // Nieve
+            "50": "mist",                    // Niebla
+            "default": "bloque_welcome"
+        };
+
+        const baseVideoUrl = "videos/";
+        let currentWeatherCode = "default";
+
+        let sunriseTime = null;
+        let sunsetTime = null;
+
+        async function updateVideoBackground(iconCode) {
+            const weatherCode = iconCode.substring(0, 2);
+            
+            // Solo cambiar si es diferente al actual
+            if (currentWeatherCode !== weatherCode) {
+                currentWeatherCode = weatherCode;
+                const videoName = weatherVideos[weatherCode] || weatherVideos["default"];
+                
+                videoElement.style.opacity = '0';
+                
+                setTimeout(async () => {
+                    // Intentar primero con .mp4, luego .mov
+                    const formats = [
+                        { ext: 'mp4', type: 'video/mp4' },
+                        { ext: 'mov', type: 'video/quicktime' }
+                    ];
+                    
+                    // Limpiar fuentes existentes
+                    videoElement.innerHTML = '';
+                    
+                    // Agregar ambas fuentes
+                    formats.forEach(format => {
+                        const source = document.createElement('source');
+                        source.src = `${baseVideoUrl}${videoName}.${format.ext}`;
+                        source.type = format.type;
+                        videoElement.appendChild(source);
+                    });
+                    
+                    // Agregar texto de fallback
+                    videoElement.appendChild(document.createTextNode('Tu navegador no soporta video HTML5.'));
+                    
+                    videoElement.load();
+                    
+                    // Intentar reproducir
+                    try {
+                        await videoElement.play();
+                        setTimeout(() => {
+                            videoElement.style.opacity = '0.6';
+                        }, 100);
+                    } catch (e) {
+                        console.log('Error al reproducir video:', e);
+                        // Intentar de nuevo después de un momento
+                        setTimeout(() => {
+                            videoElement.play().catch(err => console.log('Reintento fallido:', err));
+                            videoElement.style.opacity = '0.6';
+                        }, 500);
+                    }
+                }, 300);
+            }
+        }
+
+       // ========== RELOJ Y CLIMA ==========
+        function updateClock() {
+            const now = new Date();
+            const day = String(now.getDate());
+            const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            document.getElementById('clock-text').textContent = `${dias[now.getDay()]} ${day} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time-display').textContent = `${hours}:${minutes}:${seconds}`;
+
+            const hour = now.getHours();
+            let greet = "¡Buenas noches!";
+            if (hour >= 5 && hour < 12) greet = "¡Buenos días!";
+            else if (hour >= 12 && hour < 19) greet = "¡Buenas tardes!";
+            document.getElementById('greeting').textContent = greet;
+            // 👉 Modo día / noche
+            //updateDayNightMode();
+            updateAmbientLight();
+        }
+
+        function getWeatherIconFA(iconCode) {
+            const map = {
+                "01d": "fas fa-sun",
+                "01n": "fas fa-moon",
+                "02d": "fas fa-cloud-sun",
+                "02n": "fas fa-cloud-moon",
+                "03d": "fas fa-cloud",
+                "03n": "fas fa-cloud",
+                "04d": "fas fa-cloud-meatball",
+                "04n": "fas fa-cloud-meatball",
+                "09d": "fas fa-cloud-showers-heavy",
+                "09n": "fas fa-cloud-showers-heavy",
+                "10d": "fas fa-cloud-sun-rain",
+                "10n": "fas fa-cloud-moon-rain",
+                "11d": "fas fa-bolt",
+                "11n": "fas fa-bolt",
+                "13d": "fas fa-snowflake",
+                "13n": "fas fa-snowflake",
+                "50d": "fas fa-smog",
+                "50n": "fas fa-smog"
+            };
+
+            return map[iconCode] || "fas fa-sun";
+        }
+
+        const apiKey = "a816e4bb161fa03d9f96948db16d91e4";
+        const lat = 21;
+        const lon = -99.9167;
+
+        async function updateWeather() {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                const data = await res.json();
+
+                sunriseTime = data.sys.sunrise * 1000; // ms
+                sunsetTime  = data.sys.sunset  * 1000; // ms
+
+
+                if (!data.main || typeof data.main.temp !== 'number') {
+                    throw new Error("Datos de temperatura inválidos");
+                }
+
+                const temp = Math.round(data.main.temp);
+                const desc = data.weather[0].description.charAt(0).toUpperCase() +
+                    data.weather[0].description.slice(1);
+                const hum = data.main.humidity;
+                const loc = `${data.name}, ${data.sys.country}`;
+
+                const iconCode = data.weather[0].icon;
+                const iconClass = getWeatherIconFA(iconCode);
+
+                // Actualizar video de fondo según el clima
+                updateVideoBackground(iconCode);
+
+                // document.getElementById('mini-temp').textContent = `${temp}° C`;
+                document.getElementById('side-temp').textContent = `${temp}° C`;
+                document.getElementById('desc-text').textContent = desc;
+                // document.getElementById('side-desc').textContent = desc;
+                document.getElementById('hum-text').textContent = hum;
+                // document.getElementById('side-hum').textContent = hum;
+                // document.getElementById('loc-main').textContent = loc;
+                document.getElementById('side-loc').textContent = loc;
+
+                // document.getElementById('mini-icon').className = iconClass;
+                // document.getElementById('side-icon').className = `${iconClass} main-icon`;
+
+            } catch (e) {
+                console.error("Error al actualizar clima (manteniendo datos previos):", e);
+            }
+        }
+        function updateDayNightMode() {
+            const hour = new Date().getHours();
+            const body = document.body;
+
+            // Día: 6 AM - 18:59
+            if (hour >= 6 && hour < 19) {
+                body.classList.remove('night-mode');
+                body.classList.add('day-mode');
+            } 
+            // Noche: 19:00 - 5:59
+            else {
+                body.classList.remove('day-mode');
+                body.classList.add('night-mode');
+            }
+        }
+        function updateAmbientLight() {
+            if (!sunriseTime || !sunsetTime) return;
+
+            const now = Date.now();
+
+            const transitionDuration = 90 * 60 * 1000; // 90 minutos
+            let light = 0;
+
+            // 🌙 Noche antes del amanecer
+            if (now < sunriseTime - transitionDuration) {
+                light = 0;
+            }
+            // 🌅 Amanecer gradual
+            else if (now >= sunriseTime - transitionDuration && now < sunriseTime + transitionDuration) {
+                light = (now - (sunriseTime - transitionDuration)) / (transitionDuration * 2);
+            }
+            // 🌞 Día pleno
+            else if (now >= sunriseTime + transitionDuration && now < sunsetTime - transitionDuration) {
+                light = 1;
+            }
+            // 🌇 Atardecer gradual
+            else if (now >= sunsetTime - transitionDuration && now < sunsetTime + transitionDuration) {
+                light = 1 - ((now - (sunsetTime - transitionDuration)) / (transitionDuration * 2));
+            }
+            // 🌙 Noche total
+            else {
+                light = 0;
+            }
+
+            document.documentElement.style.setProperty(
+                '--ambient-light',
+                Math.max(0, Math.min(1, light)).toFixed(3)
+            );
+        }
+
+        setInterval(updateClock, 1000);
+        setInterval(updateWeather, 600000);
+        updateClock();
+        // updateDayNightMode();
+        setInterval(updateAmbientLight, 60000); // cada minuto
+        updateAmbientLight();
+        updateWeather();
+    </script>
+</body>
+</html>

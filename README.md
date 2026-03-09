@@ -1,43 +1,59 @@
-# Sistema de Visualización LED Dinámica (VLD)
+# Sistema de Visualización LED Dinámica (VLD) - Versión "Saludo"
 
-El **Sistema de Visualización LED Dinámica (VLD)** es una aplicación web de alto rendimiento diseñada específicamente para paneles LED de gran formato con una resolución de **8096 × 2560 px**. La aplicación proporciona información en tiempo real sobre el clima, la hora y ofrece saludos contextuales basados en el momento del día.
+El **VLD (Saludo)** es una experiencia visual inmersiva diseñada para pantallas de gran formato (**8096 × 2560 px**). Combina videografía dinámica, diseño de interfaz "Glassmorphism" y lógica ambiental reactiva para ofrecer infoentretenimiento estético en espacios públicos.
 
 ---
 
 ## 🚀 Características Principales
 
-*   **Resolución Ultra-High**: Optimizado para pantallas de 8K+ mediante el uso estratégico de Flexbox y unidades de medida proporcionales.
-*   **Saludos Contextuales**: Lógica inteligente que cambia el mensaje de bienvenida ("¡Buenos días!", "¡Buenas tardes!", "¡Buenas noches!") según la hora del sistema.
-*   **Meteorología en Tiempo Real**: Integración con la API de OpenWeather para mostrar temperatura, humedad y estado del cielo con iconos vectoriales dinámicos.
-*   **Resiliencia de Datos**: El sistema está diseñado para mantener la última información válida en pantalla incluso si hay fallas de conectividad con la API, evitando errores visuales (RNF-5).
-*   **Diseño de Alto Impacto**: Fondo negro puro (`#000000`) para optimizar el consumo de energía en paneles LED y maximizar el contraste de luminancia.
+*   **Fondos de Video Dinámicos**: Sistema inteligente que cambia el background de video (`.mp4` / `.mov`) según las condiciones climáticas reales (Soleado, Nublado, Lluvia, Tormenta, etc.), creando una atmósfera envolvente.
+*   **Ciclo Día/Noche & Luz Ambiental**: Algoritmo que ajusta el brillo, contraste y opacidad de toda la interfaz basándose en las horas astronómicas de amanecer y atardecer, garantizando una visualización óptima en cualquier momento.
+*   **Interfaz Glassmorphism**: Paneles flotantes con efectos de *backdrop-filter blur*, bordes translúcidos y sombras suaves que se integran elegantemente sobre el video de fondo.
+*   **Resiliencia Meteorológica**: Integración robusta con OpenWeatherMap, manteniendo la integridad visual incluso si fallan las actualizaciones de datos.
+*   **Saludo Inteligente**: Mensajes de bienvenida ("¡Buenos días!", "¡Buenas tardes!", "¡Buenas noches!") sincronizados con el ciclo diario.
 
 ## 🛠️ Stack Tecnológico
 
-*   **Estructura**: HTML5 Semántico.
-*   **Estilos**: CSS3 (Modelado de Flexbox 70/30).
-*   **Lógica**: JavaScript Vanilla (ES6+) con orquestación asíncrona (`async/await`).
-*   **Fuentes**: [Inter](https://fonts.google.com/specimen/Inter) para máxima legibilidad a larga distancia.
-*   **Iconos**: Font Awesome 6 (Mapeo semántico dinámico).
+*   **Estructura**: HTML5 optimizado para renderizado en resoluciones ultra-wide.
+*   **Estilos**: CSS3 Avanzado (Flexbox, CSS Variables para luz ambiental, Glass effects).
+*   **Lógica**: JavaScript ES6+ (Fetch API, Async/Await, Timers de actualización).
+*   **Fuentes**: 
+    *   **Montserrat**: Pesos Black (900), SemiBold (600) y Regular (400) para jerarquía visual clara.
+    *   **Inter**: Utilizada como fallback del sistema.
+*   **Iconos**: Font Awesome 6 (Integración dinámica por código de clima).
 
 ## ⚙️ Configuración
 
-Para configurar el sistema, edita las constantes en el bloque `<script>` de `index.html`:
+Las variables clave se encuentran al inicio del bloque `<script>` en `index3.html`:
 
 ```javascript
-const apiKey = ""; // Tu OpenWeather API Key
-const lat = ;       // Latitud geográfica
-const lon = ;  // Longitud geográfica
-```
+// API OpenWeather (Reemplazar con key propia para producción)
+const apiKey = "TU_API_KEY"; 
+const lat = 21;      // Latitud
+const lon = -99.9167; // Longitud
 
-> [!TIP]
-> El intervalo de actualización del clima está configurado a 10 minutos (600,000ms) para cumplir con los límites de cuota de la API y asegurar la frescura de los datos.
+// Mapeo de Videos (Carpeta /videos)
+const weatherVideos = {
+    "01": "sunny",
+    "02": "partly_cloudy",
+    // ... otros códigos
+    "default": "bloque_welcome"
+};
+```
 
 ## 📐 Arquitectura de Pantalla
 
-La interfaz cumple con una división estricta de paneles:
-1.  **Zona de Impacto (Izquierda - 70%)**: Saludo masivo, fecha extendida en español, ubicación y hora en formato 24h.
-2.  **Zona de Detalle (Derecha - 30%)**: Desglose técnico de condiciones meteorológicas.
+La interfaz utiliza un diseño flexible (`flex: 1` para ambos paneles) con márgenes generosos para centrar el contenido en pantallas ultra-panorámicas:
+
+1.  **Panel Izquierdo (Info Principal)**:
+    *   Logo Institucional (BLOQUE).
+    *   Saludo gigante y Fecha completa.
+2.  **Panel Derecho (Datos Clave)**:
+    *   Hora en formato 24h gran escala.
+    *   Temperatura actual y Ubicación.
+3.  **Elementos Flotantes**:
+    *   Detalles de Clima y Humedad posicionados absolutamente para equilibrio visual.
+    *   URL del sitio web institucional.
 
 ---
-© 2026 - Sistema VLD para Paneles de Gran Formato.
+© 2026 - Sistema VLD Bloque.

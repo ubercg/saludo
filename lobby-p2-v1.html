@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pantalla LED - Reloj y Clima BLOQUE</title>
+    <meta name="viewport" content="width=7680, height=1080, initial-scale=1.0">
+    
+    <!-- Google Fonts - Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* ========================= */
+        /* RESET GENERAL */
+        /* ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ========================= */
+        /* LAYOUT BASE LED 7680x1080 */
+        /* ========================= */
+        html,
+        body {
+            width: 7680px;
+            height: 1080px;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background: url('recursos/background/FONDO_AZUL.svg') no-repeat center center;
+            background-size: cover;
+            color: white;
+        }
+
+        /* ========================= */
+        /* CONTENEDOR PRINCIPAL */
+        /* ========================= */
+        .main-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 80px 120px;
+            position: relative;
+        }
+
+        /* ========================= */
+        /* LADO IZQUIERDO */
+        /* ========================= */
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+            max-width: 45%;
+            margin-left: 500px;
+        }
+
+        .brand-logo {
+            height: 350px;
+            width: auto;
+            margin-bottom: 0px;
+            margin-top: 10px;
+        }
+
+        .font-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 200px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            text-transform: uppercase;
+            letter-spacing: 0px;
+        }
+
+        .font-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 80px;
+            font-weight: 400;
+            color: white;
+            line-height: 1.2;
+            text-transform: uppercase;
+            margin-top: -20px;
+        }
+
+        .clock-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .clock-icon {
+            font-size: 110px;
+            color: white;
+        }
+
+        .clock-time {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 120px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+/* ========================= */
+/* LADO DERECHO - CLIMA */
+/* ========================= */
+.right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    margin-right: 600px;
+    margin-top: -168px;
+}
+
+.weather-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+    padding-top: 250px; /* NUEVO: espacio para el icono */
+}
+
+.weather-icon-container {
+    position: absolute;
+    top: 0; /* CAMBIO: posición desde arriba */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.weather-icon {
+    width: 350px; /* AJUSTE: tamaño reducido */
+    height: 350px;
+    object-fit: contain;
+    margin-right: 1500px;
+    margin-top: 350px;
+}
+
+.weather-day {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 180px;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0px;
+    margin-top: 0; /* CAMBIO: eliminar margen superior */
+}
+
+.weather-temp {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 300px;
+    font-weight: 900;
+    color: #17BCE2;
+    line-height: 0.85;
+    margin-top: -20px; /* AJUSTE: acercar a "VIERNES" */
+}
+
+.weather-hex {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 80px;
+    font-weight: 400;
+    color: #17BCE2;
+    text-transform: uppercase;
+    margin-top: -30px;
+}
+
+.weather-location {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 110px;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    margin-top: 10px;
+}
+
+.weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.weather-condition,
+.weather-humidity {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 70px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+}
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- LADO IZQUIERDO -->
+        <div class="left-section">
+            <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/bloque-BK2I2uP8.svg" 
+                 class="brand-logo" 
+                 alt="BLOQUE">
+            
+            <div class="font-title" id="greeting">--- ---</div>
+            <div class="font-subtitle" id="clock-text">--- --- --- --- --- -</div>
+            
+            <div class="clock-container">
+                <i class="fas fa-clock clock-icon"></i>
+                <div class="clock-time" id="clock-display">00:00:00</div>
+            </div>
+        </div>
+
+        <!-- LADO DERECHO - CLIMA -->
+        <div class="right-section">
+            <div class="weather-container">
+                <div class="weather-icon-container">
+                    <img id="weather-icon" 
+                         src="Sunny.png" 
+                         alt="Weather Icon" 
+                         class="weather-icon">
+                </div>
+                
+                <div class="weather-day" id="weather-day">---</div>
+                <div class="weather-temp" id="weather-temp">---</div>
+        
+                <div class="weather-location" id="weather-location">---, ---</div>
+                
+                <div class="weather-details">
+                    <div class="weather-condition" id="weather-condition">---</div>
+                    <div class="weather-humidity">Humedad:<span id="weather-humidity">--</span>%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURACIÓN API ==========
+        const apiKey = "a816e4bb161fa03d9f96948db16d91e4";
+        const lat = 21;
+        const lon = -99.9167;
+
+        // ========== ICONOS DE CLIMA PERSONALIZADOS ==========
+        function getWeatherIconImage(iconCode) {
+            const weatherCode = iconCode.substring(0, 2);
+            
+            const iconMap = {
+                "01": "recursos/iconos/Sunny.png",                    // Despejado
+                "02": "recursos/iconos/Cloudy-Windy-Day.png",        // Pocas nubes
+                "03": "recursos/iconos/Cloudy.png",                   // Nubes dispersas
+                "04": "recursos/iconos/Cloudy.png",                   // Nubes rotas
+                "09": "recursos/iconos/Rainy.png",                    // Lluvia ligera
+                "10": "recursos/iconos/Rainy.png",                    // Lluvia
+                "11": "recursos/iconos/Stormy.png",                   // Tormenta
+                "13": "recursos/iconos/Snowfall.png",                 // Nieve
+                "50": "recursos/iconos/Cloudy-Windy.png"              // Niebla
+            };
+
+            return iconMap[weatherCode] || "recursos/iconos/Sunny.png";
+        }
+        // ========== RELOJ Y CLIMA ==========
+        function updateClock() {
+            const now = new Date();
+            const day = String(now.getDate());
+            const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            document.getElementById('weather-day').textContent = dias[now.getDay()];
+            document.getElementById('clock-text').textContent = `${dias[now.getDay()]} ${day} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock-display').textContent = `${hours}:${minutes}:${seconds}`;
+
+            const hour = now.getHours();
+            let greet = "¡Buenas noches!";
+            if (hour >= 5 && hour < 12) greet = "¡Buenos días!";
+            else if (hour >= 12 && hour < 19) greet = "¡Buenas tardes!";
+            document.getElementById('greeting').textContent = greet;
+
+        }
+
+        // ========== ACTUALIZAR CLIMA ==========
+        async function updateWeather() {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=es`;
+                const res = await fetch(url);
+                
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                
+                const data = await res.json();
+
+                if (!data.main || typeof data.main.temp !== 'number') {
+                    throw new Error("Datos de temperatura inválidos");
+                }
+
+                // Temperatura
+                const temp = Math.round(data.main.temp);
+                document.getElementById('weather-temp').textContent = `${temp}°`;
+
+                // Descripción del clima
+                const desc = data.weather[0].description
+                    .toUpperCase()
+                    .replace(/\b\w/g, l => l.toUpperCase());
+                document.getElementById('weather-condition').textContent = desc;
+
+                // Humedad
+                const hum = data.main.humidity;
+                document.getElementById('weather-humidity').textContent = hum;
+
+                // Ubicación
+                const loc = `${data.name.toUpperCase()}, ${data.sys.country}`;
+                document.getElementById('weather-location').textContent = loc;
+
+                // Icono del clima
+                const iconCode = data.weather[0].icon;
+                const weatherIcon = getWeatherIconImage(iconCode);
+                document.getElementById('weather-icon').src = weatherIcon;
+
+            } catch (e) {
+                console.error("Error al actualizar clima:", e);
+                // Mantener datos previos en caso de error
+            }
+        }
+
+        // ========== INICIALIZACIÓN ==========
+        // Actualizar reloj cada segundo
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Actualizar clima cada 10 minutos
+        setInterval(updateWeather, 600000);
+        updateWeather();
+    </script>
+</body>
+</html>
