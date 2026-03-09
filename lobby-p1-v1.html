@@ -107,10 +107,31 @@ body {
 /* =========================
    PANEL IZQUIERDO
 ========================= */
-.brand-logo-top {
+.logos-container {
     position: absolute;
     top: 60px;
-    height: 280px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    width: 100%;
+}
+
+.logo-municipio {
+    height: 200px;
+    width: auto;
+}
+
+.logo-futuro {
+    height: 180px;
+    width: auto;
+}
+
+.brand-logo-top {
+    position: relative;
+    top: 0;
+    height: 200px;
     width: auto;
 }
 
@@ -119,7 +140,7 @@ body {
     font-size: 220px;
     font-weight: 900;
     color: white;
-    margin-top: 220px;
+    margin-top: 320px;
 }
 
 #clock-text {
@@ -173,7 +194,7 @@ body {
 
 .top-weather-detail {
     left: 1400px;
-    top: 920px;
+    top: 1025px;
 }
 
 .top-weather-detail .desc-group {
@@ -183,7 +204,7 @@ body {
 
 .weather-sub-detail {
     right: 950px;
-    top: 920px;
+    top: 1025px;
 }
 
 /* =========================
@@ -206,9 +227,9 @@ body {
 .left-panel,
 .right-panel {
     background: rgba(
-        255,
-        255,
-        255,
+        70,
+        70,
+        70,
         calc(0.08 + (var(--ambient-light) * 0.12))
     );
 }
@@ -226,9 +247,13 @@ body {
         </video>
 
         <div class="left-panel">
-            <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/bloque-BK2I2uP8.svg" class="brand-logo-top" alt="BLOQUE">
+            <div class="logos-container">
+                <img src="recursos/logos/logo-queretaro-futuro.svg" class="logo-futuro" alt="Querétaro Futuro">
+                <img src="recursos/logos/logo-queretaro-municipo.svg" class="logo-municipio" alt="Municipio de Querétaro">
+                <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/bloque-BK2I2uP8.svg" class="brand-logo-top" alt="BLOQUE">
+            </div>
             <div id="greeting">¡Buen día!</div>
-            <div id="clock-text">--- -- -- --- -- ----</div>   
+            <div id="clock-text">--- -- -- --- -- ----</div>
         </div>
         <div class="top-weather-detail">
             <div class="desc-group">

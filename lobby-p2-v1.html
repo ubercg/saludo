@@ -63,11 +63,28 @@
             margin-left: 500px;
         }
 
-        .brand-logo {
-            height: 350px;
+        .logos-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 60px;
+            width: 100%;
+        }
+
+        .logo-municipio {
+            height: 300px;
             width: auto;
-            margin-bottom: 0px;
-            margin-top: 10px;
+        }
+
+        .logo-futuro {
+            height: 280px;
+            width: auto;
+        }
+
+        .brand-logo {
+            height: 300px;
+            width: auto;
         }
 
         .font-title {
@@ -210,10 +227,12 @@
     <div class="main-container">
         <!-- LADO IZQUIERDO -->
         <div class="left-section">
-            <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/bloque-BK2I2uP8.svg" 
-                 class="brand-logo" 
-                 alt="BLOQUE">
-            
+            <div class="logos-container">
+                <img src="recursos/logos/logo-queretaro-futuro.svg" class="logo-futuro" alt="Querétaro Futuro">
+                <img src="recursos/logos/logo-queretaro-municipo.svg" class="logo-municipio" alt="Municipio de Querétaro">
+                <img src="https://bloqueqro.municipiodequeretaro.gob.mx/assets/bloque-BK2I2uP8.svg" class="brand-logo" alt="BLOQUE">
+            </div>
+
             <div class="font-title" id="greeting">--- ---</div>
             <div class="font-subtitle" id="clock-text">--- --- --- --- --- -</div>
             
